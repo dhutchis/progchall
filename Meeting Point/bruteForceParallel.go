@@ -11,6 +11,8 @@ import (
 	"os"
 	"runtime"
 	"sync"
+	"bufio"
+	"strconv"
 )
 
 type Pair struct {
@@ -30,10 +32,16 @@ func main() {
 	//fmt.Println(NCPU)
 
 	// read in data
-	_, _ = fmt.Scanln(&N)
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Split(bufio.ScanWords)
+	scanner.Scan()
+	N, _ = strconv.Atoi(scanner.Text())
 	pairs = make([]Pair, N)
 	for i := 0; i < N; i++ {
-		_, _ = fmt.Scanln(&pairs[i].x, &pairs[i].y)
+		scanner.Scan()
+		pairs[i].x, _ = strconv.Atoi(scanner.Text())
+		scanner.Scan()
+		pairs[i].y, _ = strconv.Atoi(scanner.Text())
 	}
 
 	// assign points to CPUs

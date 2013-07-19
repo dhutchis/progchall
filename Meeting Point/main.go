@@ -3,16 +3,20 @@
 	18 July 2013
 	https://www.hackerrank.com/challenges/meeting-point
 
-	Parallel Version - but not much speedup...
+	Parallel Version
 	The meeting point is the point closest to the average center of all the points.
 	I wonder if there is a mathematical proof for this out there...
+
 */
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"math"
+	"os"
 	"runtime"
+	"strconv"
 	"time"
 )
 
@@ -36,11 +40,17 @@ func main() {
 
 	// read in data & calc average
 	t0 := time.Now()
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Split(bufio.ScanWords)
+	scanner.Scan()
+	N, _ = strconv.Atoi(scanner.Text())
 	var avgx, avgy = float64(0), float64(0)
-	_, _ = fmt.Scanln(&N)
 	pairs = make([]Pair, N)
 	for i := 0; i < N; i++ {
-		_, _ = fmt.Scanln(&pairs[i].x, &pairs[i].y)
+		scanner.Scan()
+		pairs[i].x, _ = strconv.Atoi(scanner.Text())
+		scanner.Scan()
+		pairs[i].y, _ = strconv.Atoi(scanner.Text())
 		avgx += float64(pairs[i].x) / float64(N)
 		avgy += float64(pairs[i].y) / float64(N)
 	}

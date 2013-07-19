@@ -2,7 +2,7 @@ Meeting Point
 =============
 
 ## Solution ##
-Implemented in [Go](http://golang.org/).
+Implemented in [Go](http://golang.org/).  Code submission on [Hackerrank](https://www.hackerrank.com/submissions/code/732308).
 
 1. **bruteForceParallel.go** contains a somewhat naive solution.  Calculate the meeting point for each point in parallel.  Stop the calculation early if the sum exceeds the best sum so far
 2. **solution.go** uses a mathematical trick: just find the center of all the points (average the x,y point coordinates) and take the point closest to the center as the best meeting point.  I'm not sure how to mathematically justify this, but it makes sense intuitively.
@@ -17,7 +17,19 @@ Profile and time your code before optimizing!  I made the mistake of going strai
 	closest 2.0001ms
 	man dist 1.0001ms
 
-Perhaps I can crank up more performance by just doing a raw read into a *long* string, followed by more parallelized computation including converting the string words to integers and computing the average. 
+After seeing the stats, I swapped out `fmt.Scan` for `bufio.NewScanner` and `strconv.Atoi` and came up with this incredible difference:
+
+	read-in 202.0115ms
+	closest 2.0001ms
+	man dist 2.0001ms
+
+Much better!  Lesson: never use `fmt.Scan`...
+
+As some form of proof that the parallelization did accomplish something, here are the timing stats for the unparallelized version.  All these stats were taken with the 100,000 point data set in *test10.in*.
+
+	read-in 199.0114ms
+	closest 6.0004ms
+	man dist 5.0003ms
 
 ## Problem ##
 <https://www.hackerrank.com/challenges/meeting-point>

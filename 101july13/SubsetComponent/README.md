@@ -15,7 +15,11 @@ Graph#  | Vector 			|#ConnectedComponents
 The number of connected components in the graph is equivalent to the number of entries whose value is equal to their index. To combine two graph vectors, just take the pairwise minimum of each entry in the vector.
 
 ### Outcome
-Unfortunately, I ran out of time finishing my implementation.
+Unfortunately, I ran out of time finishing my implementation.  The Go solution was also not fast enough, running out of time on the second half of the test sets.
+
+The best optimization I can think of is vectorizing the calculations.  For example, the combining of vectors is a giant *map*.  Finding the number of connected components is a giant *reduce*.  How can we efficiently implement those in Go?  Haskell, Lisp or Matlab sound like better languages to use here.
+
+A second optimization is to reuse the intermediary combined subset vectors.  
 
 ## Problem Description ##
 <https://www.hackerrank.com/contests/101july13/challenges/subset-component>

@@ -30,7 +30,7 @@ func main() {
 		varr = append(varr, makeVec(d))
 	}
 
-	fmt.Println(recurSubset(make([]vec, 0, len(varr)), varr, DEFAULT_VEC))
+	fmt.Println(recurSubset( /*make([]vec, 0, len(varr)),*/ varr, DEFAULT_VEC))
 }
 
 // make a vector out of the input integer representing a graph

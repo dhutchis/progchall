@@ -12,7 +12,12 @@ import (
 
 type vec [64]uint8
 
+var DEFAULT_VEC vec
+
 func main() {
+	for i := range DEFAULT_VEC {
+		DEFAULT_VEC[i] = uint8(i)
+	}
 	//const input = "3\n2 5 9"
 	scan := bufio.NewScanner(os.Stdin)
 	//scan = bufio.NewScanner(strings.NewReader(input))
@@ -25,7 +30,7 @@ func main() {
 		varr = append(varr, makeVec(d))
 	}
 
-	fmt.Println(doSumSubsets(varr))
+	fmt.Println(recurSubset(make([]vec, 0, len(varr)), varr, DEFAULT_VEC))
 }
 
 // make a vector out of the input integer representing a graph
@@ -43,35 +48,27 @@ func makeVec(d uint64) (v vec) {
 	return v
 }
 
-// generate all subsets and get the big sum
-func doSumSubsets(vecs []vec) (sum uint64) {
-	// for each subset
-	for mask := uint64(1); mask < uint64(1)<<uint(len(vecs)); mask++ {
-		// build the subset
-		vsubset := make([]vec, 0, len(vecs)) // capacity can be optimized here: log(mask)
-		m := mask
-		for i := range vecs {
-			if m&1 == 1 {
-				vsubset = append(vsubset, vecs[i])
-			}
-			m >>= 1
-		}
-		vmin := combineVec(vsubset)
-		sum += countId(vmin)
+// call recurSubset([], varr, DEFAULT_VEC)
+// New version reuses the intermediary combined vectors
+// --realized I do not even need to pass the vectors already accounted for (lock)
+func recurSubset( /*lock,*/ todo []vec, vmin vec) (sum uint64) {
+	//fmt.Println(len(lock), len(todo), sum)
+	sum = countId(vmin)
+	for i, ti := range todo {
+		sum += recurSubset( /*append(lock, ti),*/ todo[i+1:],
+			combineVec(vmin, ti))
 	}
-	return sum + 64 // +64 for the empty subset
+	return sum
 }
 
-// take minimum of all vectors combined
-func combineVec(varr []vec) (vmin vec) {
+// take minimum of two vectors
+func combineVec(v1, v2 vec) (vmin vec) {
 	for i := range vmin {
-		min := uint8(i)
-		for j := range varr {
-			if varr[j][i] < min {
-				min = varr[j][i]
-			}
+		if v1[i] < v2[i] {
+			vmin[i] = v1[i]
+		} else {
+			vmin[i] = v2[i]
 		}
-		vmin[i] = min
 	}
 	return vmin
 }
